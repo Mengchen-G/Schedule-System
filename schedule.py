@@ -5,11 +5,10 @@ from ortools.sat.python import cp_model
 import datetime
 from random import randint
 
-# global EMPLOYEE_HOURLY_LIMIT
-# EMPLOYEE_HOURLY_LIMIT = 20
 
-# def schedule_week():
-#     print("Scheduling...")
+###########################################
+#   weekly schedule no employee request
+###########################################
 class Schedule_week_print(cp_model.CpSolverSolutionCallback):
     def __init__(self, shifts, num_employees, num_days, num_shifts, sol):
         cp_model.CpSolverSolutionCallback.__init__(self)
@@ -85,3 +84,13 @@ def schedule_week():
                                                     num_days, num_shifts,
                                                     a_few_solutions)
     solver.SearchForAllSolutions(model, solution_printer)
+
+    # Statistics.
+    print()
+    print('Statistics')
+    print('  - conflicts       : %i' % solver.NumConflicts())
+    print('  - branches        : %i' % solver.NumBranches())
+    print('  - wall time       : %f s' % solver.WallTime())
+    print('  - solutions found : %i' % solution_printer.solution_count())
+
+
