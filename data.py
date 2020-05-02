@@ -36,16 +36,16 @@ def add_employee(name, can_manage, event_pref, availability):
         'name': name,
         'can_manage': can_manage,
         'event_pref': event_pref,
-        'unavailability': availability
+        'availability': availability
     }
     db.Employees.insert_one(employee)
 
     avai_id = availability['_id']
     employee = db.Employees.find_one({'name': name})
     db.Available_hours.update_one({'_id': avai_id},{'$set': {'employee_id': employee['_id']}})
-    
+
     print('Employee added: ', name)
-    print('Current Unavailability: ', availability)
+    print('Current availability: ', availability)
 
     
     

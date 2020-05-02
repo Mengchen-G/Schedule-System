@@ -346,6 +346,7 @@ def writexls_staff(export_list):
     worksheet.write('B1', "Employee Name", bold)
     worksheet.write('C1', 'Senior Staff?', bold)
     worksheet.write('D1', 'Event Preference', bold)
+    worksheet.write('E1', 'Availability', bold)
 
     # Start from the first cell below the headers.
     row = 1
@@ -358,6 +359,7 @@ def writexls_staff(export_list):
         worksheet.write_string(row, col+1, staff['name'] )  
         worksheet.write_string(row, col+2, "True" if(staff['can_manage']) else "False" )  
         worksheet.write_string(row, col+3, staff['event_pref'] )   
+        worksheet.write(row, col+4, staff['availability'])
         row += 1
     workbook.close()
 
