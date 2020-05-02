@@ -297,7 +297,7 @@ class Window_export():
 
 # Export func
 def writexls_event(export_list):
-    workbook = xlsxwriter.Workbook('schedule.xlsx')
+    workbook = xlsxwriter.Workbook('events.xlsx')
     worksheet = workbook.add_worksheet()
 
     # Add a bold format to use to highlight cells.
@@ -337,7 +337,7 @@ def writexls_event(export_list):
 
 # export func for staff
 def writexls_staff(export_list):
-    workbook = xlsxwriter.Workbook('staff.xlsx')
+    workbook = xlsxwriter.Workbook('staffs.xlsx')
     worksheet = workbook.add_worksheet()
 
     # Add a bold format to use to highlight cells.
