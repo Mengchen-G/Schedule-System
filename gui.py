@@ -257,7 +257,7 @@ class Window_generate():
         self.gen_btn1.pack()
         tk.Label(win4, text="      ").pack()
 
-        self.gen_btn2 = tk.Button(win4, text="Generate Schedule", command=self.get_input2)
+        self.gen_btn2 = tk.Button(win4, text="Generate Schedule Based on Request", command=self.get_input2)
         self.gen_btn2.pack()
 
     def get_input(self):
