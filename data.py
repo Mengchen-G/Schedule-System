@@ -23,26 +23,41 @@ def add_event(name, date, time, duration, evt_type, num_employees):
     result = db.Events.insert_one(event)
     print('event created: ', name)
 
-def add_employee(name, can_manage, event_pref):
+def add_employee(name, can_manage, event_pref, hrs):
     
     if(can_manage == 'N'):
         can_manage = False
     else:
         can_manage = True
 
+    availability = hrs
+    # availability = {
+    #     'employee_id': "",
+    #     'Sunday': hrs[:, 0].tolist(),
+    #     'Monday': hrs[:, 1].tolist(),
+    #     'Tuesday': hrs[:, 2].tolist(),
+    #     'Wednesday': hrs[:, 3].tolist(),
+    #     'Thursday': hrs[:, 4].tolist(),
+    #     'Friday': hrs[:, 5].tolist(),
+    #     'Saturday': hrs[:, 6].tolist()
+    # }
+    db.Available_hours.insert_one(availability)
+
     employee = {
         'name': name,
         'can_manage': can_manage,
-        'event_pref': event_pref
+        'event_pref': event_pref,
+        'unavailability': hrs
     }
     result = db.Employees.insert_one(employee)
     print('Employee added: ', name)
+    print('Current Unavailability: ', availability)
 
     
     
-def set_availability( hrs):
-    # update for each day of the week 
-    # employee = db.Employees.find_one({'name': name})
+def set_availability(name, hrs):
+    # update for each day of the week s
+    employee = db.Employees.find_one({'name': name})
     availability = {
         'employee_id': "",
         'Sunday': hrs[:, 0].tolist(),
@@ -53,7 +68,7 @@ def set_availability( hrs):
         'Friday': hrs[:, 5].tolist(),
         'Saturday': hrs[:, 6].tolist()
     }
-    # db.employees.update_one({'name': employee.get('name')}, { '$set': { 'unavailability': availability } })
+    db.employees.update_one({'name': employee.get('name')}, { '$set': { 'unavailability': availability } })
     db.Available_hours.insert_one(availability)
     print("Employee hours have been set.")
     print(availability)
@@ -112,6 +127,8 @@ def get_availability(day, employee_id):
 def find_avail(name):
     employee = db.Employees.find_one({'name': name})
     last_entry = db.Available_hours.find().sort([('timestamp', -1)]).limit(1)[0]
+    print("last_entry", last_entry)
     _id = last_entry['_id']
     db.Available_hours.update_one({'_id': _id},{'$set': {'employee_id': employee['_id']}})
+    # db.employees.update_one({'_id': employee.get('_id')}, { '$set': { 'aval': last_entry } })
 
