@@ -51,19 +51,8 @@ class Window_employee():
         self.comboEvent = tk.ttk.Combobox(win1, values=["Art", "Music", "Theater", "Reception", "Dance", "No Preference"], width=18)
         self.comboEvent.grid(row=6, column=4)#.pack()
 
-        # self.add_btn = tk.Button(win1, text="Add Employee")
-        # self.name = self.add_btn['command']=self.get_input
-        # self.add_btn.grid(row=7, column=3)#.pack()
-        
-        # self.name = get_name
-
         tk.Label(win1, text="Choose Availability").grid(row=8, column=4)#.pack()
-        # availability_btn = tk.Button(win1, text="Click to View")
-        # availability_btn.config(width=23)
-        # availability_btn.pack()#grid(row=3, column=1)
-        # availability_btn['command']= self.window_calendar
-        # self.data = np.zeros((12,7))
-        self.data = collections.defaultdict(list)
+        self.data = np.zeros((12, 7)) #collections.defaultdict(list)
         self.colT = ["Sunday","Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday"]
         self.rowT = ["6-8 AM","8-10 AM","10-12 PM","12-2 PM","2-4 PM","4-6 PM","6-8 PM","8-10 PM","10-12 AM","12-2 AM","2-4 AM","4-6 AM"]
 
@@ -112,32 +101,30 @@ class Window_employee():
 
         i = 0
         for row in self.grid:
-            # self.data.append([1 for x, b in enumerate(row) if b.var.get()])
             for x,b in enumerate(row):
-                if b.var.get() and self.rowT[i] not in self.data[self.colT[x]]:
-                    self.data[self.colT[x]].append(self.rowT[i])
+                if b.var.get() == 1: #and self.rowT[i] not in self.data[self.colT[x]]:
+                    self.data[i, x] = 1 #self.data[self.colT[x]].append(self.rowT[i])
+    
             i += 1
         hrs = self.data
+
+        availability = {
+        'employee_id': "",
+        'Sunday': hrs[:, 0].tolist(),
+        'Monday': hrs[:, 1].tolist(),
+        'Tuesday': hrs[:, 2].tolist(),
+        'Wednesday': hrs[:, 3].tolist(),
+        'Thursday': hrs[:, 4].tolist(),
+        'Friday': hrs[:, 5].tolist(),
+        'Saturday': hrs[:, 6].tolist()
+        }
         # db.set_availability(name, hrs)
         # print("check name",name)
         # db.find_avail(name)
         # print(hrs)
-        db.add_employee(name, senior, event, hrs)
-        db.find_avail(name)
-        # print("retunning name", name)
-        # return name
-        # self.win1.destroy()
-
-    def get_name(self):
-        name = self.name_entry.get()
-        print("retunning name", name)
-        return name
-    
-    def get_input2(self):
-        name = self.name_entry.get()
-        db.find_avail(name)
+        db.add_employee(name, senior, event, availability)
+        # db.find_avail(name)
         self.win1.destroy()
-        return name
     
     def check_cb(self, button):
         ''' Checkbutton callback '''
@@ -159,122 +146,6 @@ class Window_employee():
                 for b in row:
                     if b.var.get() == 0:
                         b.config(state=tk.NORMAL)
-        # self.get_checked()
-
-        #print y, x, state, self.rowstate[y] 
-
-
-###############################
-#       Calendar Window
-###############################
-#     def window_calendar(self):
-#         # self.name = name
-#         win_calendar = tk.Toplevel(self.win1)
-#         win_calendar.geometry("560x450-20-20")
-#         win_calendar["bg"] = "#B8BBC5"
-#         title = tk.Label(win_calendar, text="Availability", bg="#B8BBC5",pady=50, font=("Helvetica", 16))
-#         title.grid(row = 0, column = 0)
-
-#         name_entry = tk.Entry(win_calendar, width = 22)
-#         name_entry.insert(0, "FirstName LastName")
-#         name_entry.grid(row = 1, column = 0)
-
-#         add_btn = tk.Button(win_calendar, text="confirm")
-#         self.name = add_btn['command']=self.get_name
-#         add_btn.grid(row = 1, column = 1)
-
-#         calendar = CheckGrid(win_calendar, self.name, rows=12, columns=7)
-#         # calendar = CheckGrid(win_calendar, rows=12, columns=7)
-#         done_btn = tk.Button(win_calendar, text="Update", command = calendar.get_checked)
-#         done_btn.grid(row=13, column=7)
-    
-# # Help Class for Calendar Window
-# class CheckGrid(object):
-#     ''' A grid of Checkbuttons '''
-#     def __init__(self, parent, name, rows, columns):
-#         self.parent = parent
-#         rowrange = range(rows)
-#         colrange = range(columns)
-#         self.name = name
-
-#         # self.data = collections.defaultdict(list)
-#         self.data = np.zeros((12,7))
-#         self.colT = ["Sunday","Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday"]
-#         self.rowT = ["6-8 AM","8-10 AM","10-12 PM","12-2 PM","2-4 PM","4-6 PM","6-8 PM","8-10 PM","10-12 AM","12-2 AM","2-4 AM","4-6 AM"]
-
-#         #Create the grid labels
-#         for x in colrange:
-#             w = tk.Label(parent, text=self.colT[x])
-#             w.grid(row=0, column=x+1)
-
-#         for y in rowrange:
-#             w = tk.Label(parent, text=self.rowT[y])
-#             w.grid(row=y+1, column=0)
-
-#         #Create the Checkbuttons & save them for future reference
-#         self.grid = []
-#         for y in rowrange:
-#             row = []
-#             for x in colrange:
-#                 b = tk.Checkbutton(parent)
-
-#                 #Store the button's position and value as attributes
-#                 b.pos = (y, x)
-#                 b.var = tk.IntVar()
-
-#                 #Create a callback bound to this button
-#                 func = lambda w=b: self.check_cb(w)
-#                 b.config(variable=b.var, command=func)
-#                 b.grid(row=y+1, column=x+1)
-#                 row.append(b)
-#             self.grid.append(row)
-#         # self.get_checked()
-
-#         #Track the number of on buttons in each row
-#         self.rowstate = rows * [0]
-
-
-#     def check_cb(self, button):
-#         ''' Checkbutton callback '''
-#         state = button.var.get()
-#         y, _ = button.pos
-
-#         #Get the row containing this button
-#         row = self.grid[y]
-
-#         if state == 1:
-#             self.rowstate[y] += 1 
-#             for b in row:
-#                 if b.var.get() == 0:
-#                     b.config(state=tk.NORMAL)
-#         else:
-#             self.rowstate[y] -= 1 
-#             if self.rowstate[y] == 1:
-#                 #Enable all currently off buttons in this row
-#                 for b in row:
-#                     if b.var.get() == 0:
-#                         b.config(state=tk.NORMAL)
-#         # self.get_checked()
-
-#         #print y, x, state, self.rowstate[y] 
-
-#     def get_checked(self):
-#         ''' Make a list of the selected Groups in each row'''
-        
-#         i = 0
-#         for row in self.grid:
-#             # self.data.append([1 for x, b in enumerate(row) if b.var.get()])
-#             for x,b in enumerate(row):
-#                 if b.var.get() == 1: #and self.rowT[i] not in self.data[self.colT[x]]:
-#                     self.data[i, x] = 1
-#                     # self.data[self.colT[x]].append(self.rowT[i])
-#             i += 1
-#         hrs = self.data
-#         db.set_availability(hrs)
-#         print("checn name",self.name)
-#         db.find_avail(self.name)
-#         print(hrs)
-#         self.parent.destroy()
 
 
 
