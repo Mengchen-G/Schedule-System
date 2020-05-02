@@ -52,7 +52,7 @@ class Window_employee():
         self.comboEvent.grid(row=6, column=4)#.pack()
 
         tk.Label(win1, text="Choose Availability").grid(row=8, column=4)#.pack()
-        self.data = np.zeros((12, 7)) #collections.defaultdict(list)
+        self.data = np.zeros((12, 7)).astype(int) #collections.defaultdict(list)
         self.colT = ["Sunday","Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday"]
         self.rowT = ["6-8 AM","8-10 AM","10-12 PM","12-2 PM","2-4 PM","4-6 PM","6-8 PM","8-10 PM","10-12 AM","12-2 AM","2-4 AM","4-6 AM"]
 
@@ -247,17 +247,24 @@ class Window_generate():
         title = tk.Label(win4, text="Generate Weekly Schedule", bg="#B8BBC5",pady=50, font=("Helvetica", 16), width=920)
         title.pack()
 
-        tk.Label(win4, text="Type any Date of the Week").pack()
-        self.date_entry = tk.Entry(win4)
-        self.date_entry.insert(0, "Format: mm/dd/yyyy")
-        self.date_entry.pack()
+        tk.Label(win4, text="      ").pack()
+        # tk.Label(win4, text="Type any Date of the Week").pack()
+        # self.date_entry = tk.Entry(win4)
+        # self.date_entry.insert(0, "Format: mm/dd/yyyy")
+        # self.date_entry.pack()
 
-        self.gen_btn = tk.Button(win4, text="Generate Schedule", command=self.get_input)
-        self.gen_btn['command']=self.get_input
-        self.gen_btn.pack()
+        self.gen_btn1 = tk.Button(win4, text="Generate Schedule", command=self.get_input)
+        self.gen_btn1.pack()
+        tk.Label(win4, text="      ").pack()
+
+        self.gen_btn2 = tk.Button(win4, text="Generate Schedule", command=self.get_input2)
+        self.gen_btn2.pack()
 
     def get_input(self):
         schedule.schedule_week()
+
+    def get_input2(self):
+        schedule.schedule_week_request()
 
 
 ###############################
@@ -285,7 +292,6 @@ class Window_export():
         event_list = db.get_event_list()
         staff_list = db.get_employee_list()
         writexls_event(event_list)
-        print(staff_list)
         writexls_staff(staff_list)
         return event_list
 
@@ -315,7 +321,7 @@ def writexls_event(export_list):
     row = 1
     col = 0
 
-    print(export_list)
+    # print(export_list)
     for i in range(len(export_list)):
         event = export_list[i]
         worksheet.write_number(row, col, i )  
@@ -326,6 +332,7 @@ def writexls_event(export_list):
         worksheet.write_string(row, col+5, event['type'] )   
         worksheet.write_string(row, col+6, event['num_employees'] )  
         row += 1
+    print("Event Schedule Export Successfully")
     workbook.close()
 
 # export func for staff
@@ -346,21 +353,22 @@ def writexls_staff(export_list):
     worksheet.write('B1', "Employee Name", bold)
     worksheet.write('C1', 'Senior Staff?', bold)
     worksheet.write('D1', 'Event Preference', bold)
-    worksheet.write('E1', 'Availability', bold)
+    # worksheet.write('E1', 'Availability', bold)
 
     # Start from the first cell below the headers.
     row = 1
     col = 0
 
-    print(export_list)
+    # print(export_list)
     for i in range(len(export_list)):
         staff = export_list[i]
         worksheet.write_number(row, col, i )  
         worksheet.write_string(row, col+1, staff['name'] )  
         worksheet.write_string(row, col+2, "True" if(staff['can_manage']) else "False" )  
         worksheet.write_string(row, col+3, staff['event_pref'] )   
-        worksheet.write(row, col+4, staff['availability'])
+        # worksheet.write(row, col+4, staff['availability'])
         row += 1
+    print("Staff List Export Successfully")
     workbook.close()
 
 

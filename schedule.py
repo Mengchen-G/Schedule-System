@@ -1,117 +1,87 @@
 import data as db
+import numpy as np
 import sys
 from ortools.sat.python import cp_model
 import datetime
 from random import randint
 
-global EMPLOYEE_HOURLY_LIMIT
-EMPLOYEE_HOURLY_LIMIT = 10
+# global EMPLOYEE_HOURLY_LIMIT
+# EMPLOYEE_HOURLY_LIMIT = 20
+
+# def schedule_week():
+#     print("Scheduling...")
+class Schedule_week_print(cp_model.CpSolverSolutionCallback):
+    def __init__(self, shifts, num_employees, num_days, num_shifts, sol):
+        cp_model.CpSolverSolutionCallback.__init__(self)
+        self._shifts = shifts
+        self._num_employees = num_employees
+        self._num_days = num_days
+        self._num_shifts = num_shifts
+        self._solutions = set(sol)
+        self._solution_count = 0
+
+    def on_solution_callback(self):
+        if self._solution_count in self._solutions:
+            print('Solution %i' % self._solution_count)
+            for d in range(self._num_days):
+                print('Day %i' % d)
+                for n in range(self._num_employees):
+                    is_working = False
+                    for s in range(self._num_shifts):
+                        if self.Value(self._shifts[(n, d, s)]):
+                            is_working = True
+                            print('  Employee %i works shift %i' % (n, s))
+                    if not is_working:
+                        print('  Employee {} does not work'.format(n))
+            print()
+        self._solution_count += 1
+
+    def solution_count(self):
+        return self._solution_count
 
 def schedule_week():
-    # maximize based on preferred event type 
-    # set solver to CP Solver
+    employees = db.get_employee_list()
+    num_employees = len(employees)
+    num_shifts = 3
+    num_days = 7
+    all_employees = range(num_employees)
+    all_shifts = range(num_shifts)
+    all_days = range(num_days)
+    # Creates the model.
     model = cp_model.CpModel()
 
-    # get specified events
-    events = db.get_event_list()
-    num_events = len(db.get_event_list())
-
-    employees = db.get_employee_list()
-
-    # 2 hr intervals starting at 6 am
-    # event intervals
     shifts = {}
-    event_preferences =  []
-    days = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
-    all_managers = []
-    all_avail = []
-
-    for n, employee in enumerate(employees):
-        employee_id = employee['_id']
-        avail = []
-        can_manage = []
-        for e, event in enumerate(events):
-            time = event['time']
-            hours = float(time[0:2])
-            mins = float(time[3:5])
-            print('hours ', hours)
-            start_time = hours + mins/60
-            duration = float(event['duration'])
-            end_time = start_time + duration
-            week_of = event['week_of']
-
-            time_slot = generate_time_slots(start_time, end_time)
-            weekday = get_day_of_week(event['week_of'])
-            duration = range(int(duration))
-            print(employee_id)
-            availability = db.get_availability(days[weekday], employee_id)
-            event_pref = []
-            can_manage = employee['can_manage']
-
-            available = 1
-            for n, slot in enumerate(time_slot):
-                if slot == 1 and availability[n] == 0:
-                    available = 0
-
-            model.Add(available == 1)
-
-            for h in duration:
-                shifts[(n, e, h)] = model.NewBoolVar('eventshift_n%ie%ih%i' % (n, e))
-                event_pref.append(pref)
-
-            model.Add(sum(shifts[(n, e, h)] for h in duration) + db.get_weekly_hours(employee_id, week_of) <= EMPLOYEE_HOURLY_LIMIT)
-        event_preferences.append(event_pref)
-
-    for e, event in enumerate(events):
-        model.Add(sum(shifts[(n, e, h)] for n in range(num_employees)) == event['num_employees'])
+    for e in all_employees:
+        for d in all_days:
+            for s in all_shifts:
+                shifts[(e, d, s)] = model.NewBoolVar('shift_e%id%is%i' % (e, d, s))
     
-    model.Maximize(
-        sum(event_preferences[n][e][h] * shifts[(n, e, h)] for n in range(num_employees) for e in num_employees for h in duration))
+    # each shift assigned to exactly 1 employee
+    for d in all_days:
+        for s in all_shifts:
+            model.Add(sum(shifts[(e, d, s)] for e in all_employees) == 1)
 
-    solver.solve(model)
-    show_solutions(solver, shifts, events, employees, duration, event_preferences)
+    # Each employee works at most 3 shifts per day.
+    for n in all_employees:
+        for d in all_days:
+            model.Add(sum(shifts[(n, d, s)] for s in all_shifts) <= 3)
+
+    # some employee need to take extra hous
+    min_shifts_per_e = (num_shifts * num_days) // num_employees
+    max_shifts_per_e = min_shifts_per_e + 1
+    for n in all_employees:
+        num_shifts_worked = sum(
+            shifts[(e, d, s)] for d in all_days for s in all_shifts)
+        model.Add(min_shifts_per_e <= num_shifts_worked)
+        model.Add(num_shifts_worked <= max_shifts_per_e)
     
-def set_schedule(employees):
-    db.staff_event(employees)
+    # create solver
+    solver = cp_model.CpSolver()
+    solver.parameters.linearization_level=0
 
-def show_solutions(shifts, events, employees, duration, event_pref):
-
-    for n, employee in enumerate(employees):
-        for e, event in enumerate(events):
-            for h in duration: 
-                if solver.Value(shifts[(n, e, h)]) == 1:
-                    if event_pref[n][e][h] == 1:
-                        print('Employee: ', employee['name'], 'Works event: ', event['event_name'], ' (preferred)')
-                    else: 
-                        print('Employee: ', employee['name'], 'Works event: ', event['event_name'], ' (not preferred)')
-    return 
-
-def get_day_of_week(date):
-    month = int(date[0:2])
-    day = date[3:5]
-    year = date[6:10]
-    return randint(0,6)
-
-
-def generate_time_slots(start, end):
-    day = [0] * 12
-
-    time = 6.0
-    for n in range(12):
-        if start >= time and start < (time + 2):
-            day[n] = 1
-            i = n
-        if end <=  (time + 2) and end > time:
-            day[n] = 1
-            j = n
-        time += 2.0
-        if time > 24:
-            time = 0
-
-    for n in range(12):
-        if n > i and n < j:
-            day[n] = 1
-    print(day)
-    return day 
-
-        
+    # show solutions
+    a_few_solutions = range(5)
+    solution_printer = Schedule_week_print(shifts, num_employees,
+                                                    num_days, num_shifts,
+                                                    a_few_solutions)
+    # solver.SearchForAllSolutions(model, solution_printer)

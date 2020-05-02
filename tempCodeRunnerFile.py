@@ -1,4 +1,3 @@
-ity(name, hrs)
-        # print("check name",name)
-        # db.find_avail(name)
-        # print(hrs)
+
+        # date_typed = self.date_entry.get()
+        # print(date_typed)
