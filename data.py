@@ -20,7 +20,7 @@ def add_event(name, date, time, duration, evt_type, num_employees):
         'type': evt_type, 
         'num_employees': num_employees
     }
-    result = db.Events.insert_one(event)
+    db.Events.insert_one(event)
     print('event created: ', name)
 
 def add_employee(name, can_manage, event_pref, availability):
