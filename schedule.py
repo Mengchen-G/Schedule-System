@@ -80,8 +80,8 @@ def schedule_week():
     solver.parameters.linearization_level=0
 
     # show solutions
-    a_few_solutions = range(5)
+    a_few_solutions = range(2)
     solution_printer = Schedule_week_print(shifts, num_employees,
                                                     num_days, num_shifts,
                                                     a_few_solutions)
-    # solver.SearchForAllSolutions(model, solution_printer)
+    solver.SearchForAllSolutions(model, solution_printer)
