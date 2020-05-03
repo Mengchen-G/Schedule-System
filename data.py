@@ -2,6 +2,7 @@
 from pymongo import MongoClient
 from pprint import pprint
 import datetime
+import numpy as np
 
 client = MongoClient("mongodb+srv://mary_martin:If6was9then%3F@lp-cluster-jdvpa.mongodb.net/?authSource=admin")
 db = client.Staffing
@@ -73,13 +74,8 @@ def change_event_pref(name, pref):
     db.employees.update_one({'_id': employee.get('_id')}, { '$set': { 'event_pref': pref } })
 
 def get_event(event_name):
-
     event = db.Events.find_one({'event_name': event_name})
     return event
-
-# def set_employee_hrs(hours):
-
-#     db.employees.update_one({'_id': employee.get('_id') }, { '$set': { 'event_pref': pref } })
 
 def get_employee_list():
     
@@ -99,12 +95,10 @@ def get_employee_count():
     print("Employee count: ", employee_count)
     return employee_count
 
-def staff_event(employees, event_name):
+def staff_event(event_name):
     event = get_event(event_name)
-    db.Events.update_one({'_id':  event.get('_id')  }, { '$set': { 'staff': employees} })
-
-# def get_weekly_hours(employee_id):
-#     return db.Weekly_hours.find_one({'employee_id': employee_id, 'week_of': week_of})['hours']
+    hr = int(event['time'][:2])
+    
 
 def update_weekly_hours(employee_id, week_of, hrs):
     hrs_td = db.Weekly_hours.find_one({'employee_id': employee_id, 'week_of': week_of})
