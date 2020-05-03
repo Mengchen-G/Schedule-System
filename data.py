@@ -112,11 +112,3 @@ def get_availability(day, employee_id):
     print(day)
     return availability[str(day)]
 
-# def find_avail(name):
-#     employee = db.Employees.find_one({'name': name})
-#     last_entry = db.Available_hours.find().sort([('timestamp', -1)]).limit(1)[0]
-#     print("last_entry", last_entry)
-#     _id = last_entry['_id']
-#     db.Available_hours.update_one({'_id': _id},{'$set': {'employee_id': employee['_id']}})
-#     # db.employees.update_one({'_id': employee.get('_id')}, { '$set': { 'aval': last_entry } })
-
