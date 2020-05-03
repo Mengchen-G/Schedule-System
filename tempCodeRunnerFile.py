@@ -1,3 +1,1 @@
-
-        # date_typed = self.date_entry.get()
-        # print(date_typed)
+["6-8 AM","8-10 AM","10-12 PM","12-2 PM","2-4 PM","4-6 PM","6-8 PM","8-10 PM","10-12 AM","12-2 AM","2-4 AM","4-6 AM"]

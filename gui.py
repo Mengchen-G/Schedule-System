@@ -132,16 +132,16 @@ class Window_employee():
         y, _ = button.pos
 
         #Get the row containing this button
-        row = self.grid[y-9]
+        row = self.grid[y-10]
 
         if state == 1:
-            self.rowstate[y-9] += 1 
+            self.rowstate[y-10] += 1 
             for b in row:
                 if b.var.get() == 0:
                     b.config(state=tk.NORMAL)
         else:
-            self.rowstate[y-9] -= 1 
-            if self.rowstate[y-9] == 1:
+            self.rowstate[y-10] -= 1 
+            if self.rowstate[y-10] == 1:
                 #Enable all currently off buttons in this row
                 for b in row:
                     if b.var.get() == 0:
@@ -248,10 +248,6 @@ class Window_generate():
         title.pack()
 
         tk.Label(win4, text="      ").pack()
-        # tk.Label(win4, text="Type any Date of the Week").pack()
-        # self.date_entry = tk.Entry(win4)
-        # self.date_entry.insert(0, "Format: mm/dd/yyyy")
-        # self.date_entry.pack()
 
         self.gen_btn1 = tk.Button(win4, text="Generate Schedule", command=self.get_input)
         self.gen_btn1.pack()
@@ -387,7 +383,7 @@ add_employee_btn = tk.Button(text="Add an Employee", height = 6)
 add_event_btn = tk.Button(text="Add an Event", height = 6)
 staff_event_btn = tk.Button(text="Staff an Event", height = 6)
 create_schedule_btn = tk.Button(text="Create Weekly Schedule", height = 6)
-export_schedule_btn = tk.Button(text="Export Weekly Schedule", height = 6)
+export_schedule_btn = tk.Button(text="Export Employee/Event Data", height = 6)
 
 # change buttons size
 add_employee_btn.config(width=20)

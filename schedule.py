@@ -4,6 +4,7 @@ import sys
 from ortools.sat.python import cp_model
 import datetime
 from random import randint
+import xlsxwriter
 
 
 ###########################################
@@ -41,7 +42,7 @@ class Schedule_week_print(cp_model.CpSolverSolutionCallback):
 def schedule_week():
     employees = db.get_employee_list()
     num_employees = len(employees)
-    num_shifts = 3
+    num_shifts = 12
     num_days = 7
     all_employees = range(num_employees)
     all_shifts = range(num_shifts)
@@ -63,7 +64,7 @@ def schedule_week():
     # Each employee works at most 3 shifts per day.
     for n in all_employees:
         for d in all_days:
-            model.Add(sum(shifts[(n, d, s)] for s in all_shifts) <= 3)
+            model.Add(sum(shifts[(n, d, s)] for s in all_shifts) <= 4)
 
     # some employee need to take extra hous
     min_shifts_per_e = (num_shifts * num_days) // num_employees
@@ -101,7 +102,7 @@ def schedule_week():
 def schedule_week_request():
     employees = db.get_employee_list()
     num_employees = len(employees)
-    num_shifts = 3
+    num_shifts = 12
     num_days = 7
     all_employees = range(num_employees)
     all_shifts = range(num_shifts)
@@ -123,7 +124,6 @@ def schedule_week_request():
 
     # shifts[(e, d, s)]: employee 'n' works shift 's' on day 'd'.
     shifts = {}
-    shifts = {}
     for e in all_employees:
         for d in all_days:
             for s in all_shifts:
@@ -135,7 +135,7 @@ def schedule_week_request():
     
     for e in all_employees:
         for d in all_days:
-            model.Add(sum(shifts[(e, d, s)] for s in all_shifts) <= 3)
+            model.Add(sum(shifts[(e, d, s)] for s in all_shifts) <= 4)
     
     min_shifts_per_e = (num_shifts * num_days) // num_employees
     max_shifts_per_e = min_shifts_per_e + 1
@@ -152,21 +152,30 @@ def schedule_week_request():
     # Creates the solver and solve.
     solver = cp_model.CpSolver()
     solver.Solve(model)
+    export_list = []
+
     for d in all_days:
-        print('Day', d)
-        for e in all_employees:
-            for s in all_shifts:
+        print('Generating schedule for Day ', d)
+        dlist = []
+        dlist.append(d)
+        for s in all_shifts:
+            for e in all_employees:
                 if solver.Value(shifts[(e, d, s)]) == 1:
                     if shift_requests[e][d][s] == 1:
-                        print('Employee', e, 'works shift', s, '(requested).')
+                        # print('Employee', e, 'works shift', s, '(requested).')
+                        dlist.append(str(e)+' (requested)')
                     else:
-                        print('employee', e, 'works shift', s, '(not requested).')
+                        # print('employee', e, 'works shift', s, '(not requested).') 
+                        dlist.append(str(e)+' (not requested)')
+
+        export_list.append(dlist) 
         print()
-    
+
+    writexls(export_list)
     # Statistics.
     print()
     print('Statistics')
     print('  - Number of shift requests met = %i' % solver.ObjectiveValue(),
-          '(out of', num_employees * min_shifts_per_e, ')')
+          '(out of', num_shifts * num_days, ')')
     print('  - wall time       : %f s' % solver.WallTime())
 
