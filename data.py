@@ -97,8 +97,8 @@ def get_employee_count():
 
 def staff_event(event_name):
     event = get_event(event_name)
-    hr = int(event['time'][:2])
-    
+    db.Events.update_one({'_id':  event.get('_id')  }, { '$set': { 'staff': employees} })
+
 
 def update_weekly_hours(employee_id, week_of, hrs):
     hrs_td = db.Weekly_hours.find_one({'employee_id': employee_id, 'week_of': week_of})
