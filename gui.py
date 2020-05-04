@@ -215,7 +215,6 @@ class Window_staff():
         tk.Label(win3, text="     ").pack()
 
         eventl = []
-        timel = []
         events = db.get_event_list()
         for event in events:
             eventl.append(event['event_name'])
