@@ -241,57 +241,6 @@ class Window_staff():
     def get_input(self):
         event_name=self.combo_event.get()
         event = db.get_event(event_name)
-        # hr = int(event['time'][:2])
-        # if hr < 2:
-        #     slot = 9
-        # elif hr < 4:
-        #     slot = 10
-        # elif hr < 6:
-        #     slot = 11
-        # elif hr < 8:
-        #     slot = 0
-        # elif hr < 10:
-        #     slot = 1
-        # elif hr < 12:
-        #     slot = 2
-        # elif hr < 14:
-        #     slot = 3
-        # elif hr < 16:
-        #     slot = 4
-        # elif hr < 18:
-        #     slot = 5
-        # elif hr < 20:
-        #     slot = 6
-        # elif hr <22:
-        #     slot = 7
-        # else:
-        #     slot = 8
-        
-        # week_of = event['week_of']
-        # month, day, year = (int(x) for x in week_of.split('/'))    
-        # ans = datetime.date(year, month, day)
-        # d_week = ["Sunday", "Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday"]
-        # # print("=============================================================================")
-        # # print(ans)
-        # day_i = d_week.index(ans.strftime("%A"))
-        # numStaff = event['num_employees']
-        # staffs = db.get_employee_list()
-        # for _ in range(len(numStaff)):
-        #     for s in staffs:
-        #         avail = []
-        #         avai = s['availability']
-        #         avail.append(np.array(avai["Sunday"]).astype(int))
-        #         avail.append(np.array(avai["Monday"]).astype(int))
-        #         avail.append(np.array(avai["Tuesday"]).astype(int))
-        #         avail.append(np.array(avai["Wednesday"]).astype(int))
-        #         avail.append(np.array(avai["Thursday"]).astype(int))
-        #         avail.append(np.array(avai["Friday"]).astype(int))
-        #         avail.append(np.array(avai["Saturday"]).astype(int))
-        #         # print("=============================================================================")
-        #         # print(slot, day_i, np.shape(avail))
-        #         if s['event_pref'] == event['type'] or s['event_pref'] == "No Preference":
-        #             if avail[slot][day_i] == 1:
-        #                 db.staff_event(s, event_name)
         db.staff_event(event_name)
         print("=============================================================================")
         print(event)
