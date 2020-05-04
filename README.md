@@ -25,7 +25,7 @@
   - Date
   - Time
   - Duration
-  - # Staff Need
+  - Num Staff Need
 - Staff an Event
   - Select Event (Spinner)
   - Staff Event (Button)
