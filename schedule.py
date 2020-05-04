@@ -61,7 +61,7 @@ def schedule_week():
         for s in all_shifts:
             model.Add(sum(shifts[(e, d, s)] for e in all_employees) == 1)
 
-    # Each employee works at most 3 shifts per day.
+    # Each employee works at most 4 shifts per day.
     for n in all_employees:
         for d in all_days:
             model.Add(sum(shifts[(n, d, s)] for s in all_shifts) <= 4)
@@ -129,10 +129,12 @@ def schedule_week_request():
             for s in all_shifts:
                 shifts[(e, d, s)] = model.NewBoolVar('shift_e%id%is%i' % (e, d, s))
     
+    # each shift assigned to exactly 1 employee
     for d in all_days:
         for s in all_shifts:
             model.Add(sum(shifts[(e, d, s)] for e in all_employees) == 1)
     
+    # each employee can take max 4 shifts a day
     for e in all_employees:
         for d in all_days:
             model.Add(sum(shifts[(e, d, s)] for s in all_shifts) <= 4)
@@ -180,8 +182,10 @@ def schedule_week_request():
           '(out of', num_shifts * num_days, ')')
     print('  - wall time       : %f s' % solver.WallTime())
 
+
+# Export Weekly Schedule based on availability
 def writexls(export_list):
-    workbook = xlsxwriter.Workbook('shedule_request.xlsx')
+    workbook = xlsxwriter.Workbook('shedule_request1.xlsx')
     worksheet = workbook.add_worksheet()
     worksheet.set_column(1, 1, 15)
     worksheet.set_column(1, 2, 15)
