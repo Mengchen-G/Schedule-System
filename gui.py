@@ -274,10 +274,6 @@ class Window_export():
         title = tk.Label(win5, text="Export Employee & Event Data", bg="#B8BBC5",pady=50, font=("Helvetica", 16), width=920)
         title.pack()
 
-        # tk.Label(win5, text="Type any Date of the Week").pack()
-        # self.date_entry = tk.Entry(win5)
-        # self.date_entry.insert(0, "Format: mm/dd/yyyy")
-        # self.date_entry.pack()
         tk.Label(win5, text="           ").pack()
         self.gen_btn = tk.Button(win5, text="Generate & Export")
         self.gen_btn['command']=self.get_input
