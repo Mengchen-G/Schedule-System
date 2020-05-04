@@ -185,7 +185,7 @@ def schedule_week_request():
 
 # Export Weekly Schedule based on availability
 def writexls(export_list):
-    workbook = xlsxwriter.Workbook('shedule_request1.xlsx')
+    workbook = xlsxwriter.Workbook('schedule_request1.xlsx')
     worksheet = workbook.add_worksheet()
     worksheet.set_column(1, 1, 15)
     worksheet.set_column(1, 2, 15)
