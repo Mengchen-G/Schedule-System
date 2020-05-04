@@ -19,7 +19,7 @@ class Window_employee():
         win1 = tk.Toplevel(root)
         self.win1 = win1
         win1.geometry("845x675-20-20")
-        # title = tk.Label(win1, text="Add an employee",pady=50, bg="#B8BBC5",font=("Helvetica", 16),width = 920)
+        # title of window
         title = tk.Label(win1, text="          Add an employee           ",pady=50, bg="#B8BBC5", font=("Helvetica", 16))
         title.grid(row=0, column=4)#.pack()
         blank1 = tk.Label(win1, text = "employee ", pady=50, fg="#B8BBC5", bg="#B8BBC5",font=("Helvetica", 16))
@@ -39,6 +39,7 @@ class Window_employee():
         blank7.grid(row=0, column=7)
         blank8.grid(row=0, column=8)
 
+        # enter employee information
         tk.Label(win1, text="Name").grid(row=1, column=4)#.pack()
         self.name_entry = tk.Entry(win1, width = 20)
         self.name_entry.insert(0, "FirstName LastName")
@@ -57,6 +58,8 @@ class Window_employee():
         self.colT = ["Sunday","Monday", "Tuesday", "Wednesday","Thursday","Friday","Saturday"]
         self.rowT = ["6-8 AM","8-10 AM","10-12 PM","12-2 PM","2-4 PM","4-6 PM","6-8 PM","8-10 PM","10-12 AM","12-2 AM","2-4 AM","4-6 AM"]
 
+        ###############################
+        #       Calendar View
         rowrange = range(len(self.rowT))
         colrange = range(len(self.colT))
 
