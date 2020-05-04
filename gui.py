@@ -121,11 +121,9 @@ class Window_employee():
         'Thursday': hrs[:, 4].tolist(),
         'Friday': hrs[:, 5].tolist(),
         'Saturday': hrs[:, 6].tolist()
-        }
-        # db.set_availability(name, hrs)
-        # print("check name",name)
-        # db.find_avail(name)
-        # print(hrs)
+        } 
+
+        # add employee to database
         db.add_employee(name, senior, event, availability)
         # db.find_avail(name)
         self.win1.destroy()
@@ -146,7 +144,7 @@ class Window_employee():
         else:
             self.rowstate[y-10] -= 1 
             if self.rowstate[y-10] == 1:
-                #Enable all currently off buttons in this row
+                # Enable all currently off buttons in this row
                 for b in row:
                     if b.var.get() == 0:
                         b.config(state=tk.NORMAL)
