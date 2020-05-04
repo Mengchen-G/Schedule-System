@@ -280,8 +280,6 @@ class Window_export():
         self.gen_btn.pack()
 
     def get_input(self):
-        # date_typed = self.date_entry.get()
-        # print(date_typed)
         event_list = db.get_event_list()
         staff_list = db.get_employee_list()
         writexls_event(event_list)
