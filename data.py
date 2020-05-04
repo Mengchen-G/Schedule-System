@@ -49,7 +49,6 @@ def add_employee(name, can_manage, event_pref, availability):
     print('Current availability: ', availability)
 
     
-    
 def set_availability(name, hrs):
     # update for each day of the week s
     employee = db.Employees.find_one({'name': name})
@@ -69,7 +68,6 @@ def set_availability(name, hrs):
     print(availability)
 
 def change_event_pref(name, pref):
-
     employee = db.Employees.find_one({'name': name})
     db.employees.update_one({'_id': employee.get('_id')}, { '$set': { 'event_pref': pref } })
 
@@ -78,19 +76,16 @@ def get_event(event_name):
     return event
 
 def get_employee_list():
-    
     employee_list = list(db.Employees.find({}))
     print("Employee list: ", employee_list)
     return employee_list
 
 def get_event_list():
-    
     event_list = list(db.Events.find({}))
     print("Event list: ", event_list)
     return event_list
 
 def get_employee_count():
-   
     employee_count = len(list(db.Events.find({})))
     print("Employee count: ", employee_count)
     return employee_count
@@ -155,8 +150,6 @@ def staff_event(event_name):
                     # db.staff_event(s, event_name)
                     add_field = "staff"+str(i)
                     db.Events.update_one({'_id':  event.get('_id')  }, { '$set': { add_field: s} })
-    # db.Events.update_one({'_id':  event.get('_id')  }, { '$set': { 'staff': employees} })
-
 
 def update_weekly_hours(employee_id, week_of, hrs):
     hrs_td = db.Weekly_hours.find_one({'employee_id': employee_id, 'week_of': week_of})

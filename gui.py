@@ -148,12 +148,9 @@ class Window_employee():
                     if b.var.get() == 0:
                         b.config(state=tk.NORMAL)
 
-
-
 ###############################
 #          Add Event
 ###############################
-
 class Window_event():
     def __init__(self):
         win2 = tk.Toplevel(root)
@@ -202,7 +199,6 @@ class Window_event():
         db.add_event(eventName, date, time, duration, eventType, numStaff)
         return eventInfo
 
-
 ###############################
 #      Staff Event Window
 ###############################
@@ -237,7 +233,6 @@ class Window_staff():
         print(event)
         return event_name
 
-
 ###############################
 #   Schedule Generate Window
 ###############################
@@ -262,7 +257,6 @@ class Window_generate():
 
     def get_input2(self):
         schedule.schedule_week_request()
-
 
 ###############################
 #   Schedule Export Window
@@ -362,7 +356,6 @@ def writexls_staff(export_list):
     print("Staff List Export Successfully")
     workbook.close()
 
-
 ###############################
 #         Root Window
 ###############################
@@ -398,7 +391,6 @@ add_event_btn.grid(row=1, column=1)
 staff_event_btn.grid(row=1, column=2)
 create_schedule_btn.grid(row=1, column=3)
 export_schedule_btn.grid(row=1, column=4)
-
 
 # click functions
 add_employee_btn['command'] = Window_employee

@@ -6,7 +6,6 @@ import datetime
 from random import randint
 import xlsxwriter
 
-
 ###########################################
 #   weekly schedule no employee request
 ###########################################
@@ -47,6 +46,7 @@ def schedule_week():
     all_employees = range(num_employees)
     all_shifts = range(num_shifts)
     all_days = range(num_days)
+
     # Creates the model.
     model = cp_model.CpModel()
 
@@ -172,6 +172,7 @@ def schedule_week_request():
         print()
 
     writexls(export_list)
+
     # Statistics.
     print()
     print('Statistics')
@@ -216,8 +217,6 @@ def writexls(export_list):
 
     # Start from the first cell below the headers.
     row = 1
-
-    # print(export_list)
     for i in range(len(export_list)):
         worksheet.write_number(row, 0, export_list[i][0] ) 
         for j in range (1,len(export_list[0])):
