@@ -224,7 +224,14 @@ class Window_staff():
         self.combo_event = tk.ttk.Combobox(win3, values=eventl, width=20)
         self.combo_event.pack()
 
+        # tk.Label(win3, text="Date of the event").pack()
+        # self.date_entry = tk.Entry(win3, width=22)
+        # self.date_entry.insert(0, "Format: mm/dd/yyyy")
+        # self.date_entry.pack()
 
+        # tk.Label(win3, text="# Staff Needed").pack()
+        # self.combo_num = tk.ttk.Combobox(win3, values=[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20], width=20)
+        # self.combo_num.pack()
         tk.Label(win3, text="     ").pack()
 
         self.add_btn = tk.Button(win3, text="Staff Event")
@@ -234,7 +241,7 @@ class Window_staff():
     def get_input(self):
         event_name=self.combo_event.get()
         event = db.get_event(event_name)
-        
+        db.staff_event(event_name)
         print("=============================================================================")
         print(event)
         return event_name
