@@ -179,3 +179,49 @@ def schedule_week_request():
           '(out of', num_shifts * num_days, ')')
     print('  - wall time       : %f s' % solver.WallTime())
 
+def writexls(export_list):
+    workbook = xlsxwriter.Workbook('shedule_request.xlsx')
+    worksheet = workbook.add_worksheet()
+    worksheet.set_column(1, 1, 15)
+    worksheet.set_column(1, 2, 15)
+    worksheet.set_column(1, 3, 15)
+    worksheet.set_column(1, 4, 15)
+    worksheet.set_column(1, 5, 15)
+    worksheet.set_column(1, 6, 15)
+    worksheet.set_column(1, 7, 15)
+    worksheet.set_column(1, 8, 15)
+    worksheet.set_column(1, 9, 15)
+    worksheet.set_column(1, 10, 15)
+    worksheet.set_column(1, 11, 15)
+    worksheet.set_column(1, 12, 15)
+    worksheet.set_column(1, 13, 15)
+    bold = workbook.add_format({'bold': 1})
+
+    rowT = ["6-8 AM","8-10 AM","10-12 PM","12-2 PM","2-4 PM","4-6 PM","6-8 PM","8-10 PM","10-12 AM","12-2 AM","2-4 AM","4-6 AM"]
+
+    # Write some data headers.
+    worksheet.write('A1', "Day", bold)
+    worksheet.write('B1', rowT[0], bold)
+    worksheet.write('C1', rowT[1], bold)
+    worksheet.write('D1', rowT[2], bold)
+    worksheet.write('E1', rowT[3], bold)
+    worksheet.write('F1', rowT[4], bold)
+    worksheet.write('G1', rowT[5], bold)
+    worksheet.write('H1', rowT[6], bold)
+    worksheet.write('I1', rowT[7], bold)
+    worksheet.write('J1', rowT[8], bold)
+    worksheet.write('K1', rowT[9], bold)
+    worksheet.write('L1', rowT[10], bold)
+    worksheet.write('M1', rowT[11], bold)
+
+    # Start from the first cell below the headers.
+    row = 1
+
+    # print(export_list)
+    for i in range(len(export_list)):
+        worksheet.write_number(row, 0, export_list[i][0] ) 
+        for j in range (1,len(export_list[0])):
+            worksheet.write_string(row, j, export_list[i][j]) 
+        row += 1
+    print("Schedule based on Employee Request Export Successfully")
+    workbook.close()
