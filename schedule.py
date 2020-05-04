@@ -3,7 +3,6 @@ import numpy as np
 import sys
 from ortools.sat.python import cp_model
 import datetime
-from random import randint
 import xlsxwriter
 
 ###########################################
