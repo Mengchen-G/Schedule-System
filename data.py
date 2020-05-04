@@ -151,15 +151,15 @@ def staff_event(event_name):
                     add_field = "staff"+str(i)
                     db.Events.update_one({'_id':  event.get('_id')  }, { '$set': { add_field: s} })
 
-def update_weekly_hours(employee_id, week_of, hrs):
-    hrs_td = db.Weekly_hours.find_one({'employee_id': employee_id, 'week_of': week_of})
-    total = hrs_td['hours']
-    _id = hrs_td['_id']
-    db.Weekly_hours.update_one({'_id': _id},{'$set': {'hours': (total+hrs)}})
+# def update_weekly_hours(employee_id, week_of, hrs):
+#     hrs_td = db.Weekly_hours.find_one({'employee_id': employee_id, 'week_of': week_of})
+#     total = hrs_td['hours']
+#     _id = hrs_td['_id']
+#     db.Weekly_hours.update_one({'_id': _id},{'$set': {'hours': (total+hrs)}})
 
-def get_availability(day, employee_id):
-    availability = db.Available_hours.find_one({'employee_id': employee_id})
-    print(availability)
-    print(day)
-    return availability[str(day)]
+# def get_availability(day, employee_id):
+#     availability = db.Available_hours.find_one({'employee_id': employee_id})
+#     print(availability)
+#     print(day)
+#     return availability[str(day)]
 
